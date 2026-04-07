@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900;
+    font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+}
+
+.glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
+}
+
+.sidebar-item-active {
+  @apply bg-violet-50 text-violet-700 font-semibold;
+}
+
+.dark .sidebar-item-active {
+  @apply bg-violet-900/40 text-violet-300;
+}
