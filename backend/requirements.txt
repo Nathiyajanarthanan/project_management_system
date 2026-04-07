@@ -4,3 +4,5 @@ Flask-Migrate
 Flask-JWT-Extended
 Flask-Bcrypt
 Flask-Cors
+gunicorn
+psycopg2-binary

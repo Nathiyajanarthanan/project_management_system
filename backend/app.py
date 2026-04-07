@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+import os
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory
@@ -92,10 +93,16 @@ class ActivityLog(db.Model):
 def create_app():
     frontend_dist = Path(__file__).resolve().parent.parent / "frontend" / "dist"
     app = Flask(__name__, static_folder=str(frontend_dist), static_url_path="/")
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project_management.db"
+    
+    # Use environment variables for production, fallback to local defaults for development
+    database_url = os.getenv("DATABASE_URL")
+    if database_url and database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url or "sqlite:///project_management.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["JWT_SECRET_KEY"] = "change-me-in-production"
-    app.config["UPLOAD_FOLDER"] = "uploads"
+    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "change-me-in-production")
+    app.config["UPLOAD_FOLDER"] = os.getenv("UPLOAD_FOLDER", "uploads")
     app.config["FRONTEND_DIST"] = frontend_dist
 
     Path(app.config["UPLOAD_FOLDER"]).mkdir(exist_ok=True)
